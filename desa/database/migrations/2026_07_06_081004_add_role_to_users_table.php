@@ -12,7 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            // Role untuk pembagian akses (admin vs warga)
+            $table->enum('role', ['admin', 'warga'])->default('warga')->after('email_verified_at');
+
+            // Hubungkan user warga ke data resident (NIK terverifikasi)
+            $table->foreignId('resident_id')->nullable()->after('role')->constrained('residents')->nullOnDelete();
         });
     }
 
@@ -22,7 +26,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropForeign(['resident_id']);
+            $table->dropColumn('resident_id');
+            $table->dropColumn('role');
         });
     }
 };
+

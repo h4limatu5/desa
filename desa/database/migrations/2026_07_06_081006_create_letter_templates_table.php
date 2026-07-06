@@ -13,7 +13,19 @@ return new class extends Migration
     {
         Schema::create('letter_templates', function (Blueprint $table) {
             $table->id();
+
+            // Jenis surat (contoh: pengantar, tdk mampu, dll)
+            $table->string('jenis_surat');
+
+            // Nama template untuk admin
+            $table->string('name');
+
+            // Content template Blade (string) - akan dirender saat approve
+            $table->longText('template_content');
+
             $table->timestamps();
+
+            $table->unique(['jenis_surat', 'name']);
         });
     }
 
@@ -25,3 +37,6 @@ return new class extends Migration
         Schema::dropIfExists('letter_templates');
     }
 };
+
+
+

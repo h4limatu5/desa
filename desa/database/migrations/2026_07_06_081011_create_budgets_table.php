@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
+            $table->string('year');
+            $table->string('category');
+            $table->bigInteger('allocated')->default(0);
+            $table->bigInteger('spent')->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

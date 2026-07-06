@@ -12,10 +12,37 @@ class AdminResidentController extends Controller
         return view('admin.residents.show', compact('resident'));
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $residents = Resident::query()->orderByDesc('id')->paginate(10);
-        return view('admin.residents.index', compact('residents'));
+        $query = Resident::query();
+
+        if ($request->filled('nik')) {
+            $query->where('nik', 'like', '%' . $request->nik . '%');
+        }
+
+        if ($request->filled('kk')) {
+            $query->where('kk', 'like', '%' . $request->kk . '%');
+        }
+
+        if ($request->filled('status_warga')) {
+            $query->where('status_warga', $request->status_warga);
+        }
+
+        if ($request->filled('jenis_kelamin')) {
+            $query->where('jenis_kelamin', $request->jenis_kelamin);
+        }
+
+        $residents = $query->orderByDesc('id')->paginate(10)->withQueryString();
+
+        $stats = [
+            'total' => Resident::count(),
+            'active' => Resident::where('status_warga', 'Aktif')->count(),
+            'inactive' => Resident::where('status_warga', 'Nonaktif')->count(),
+            'male' => Resident::where('jenis_kelamin', 'Laki-laki')->count(),
+            'female' => Resident::where('jenis_kelamin', 'Perempuan')->count(),
+        ];
+
+        return view('admin.residents.index', compact('residents', 'stats'));
     }
 
     public function create()

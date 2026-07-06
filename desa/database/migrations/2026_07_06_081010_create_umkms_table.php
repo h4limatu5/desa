@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('umkms', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->string('category')->nullable();
+            $table->text('description')->nullable();
+            $table->string('owner')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('image_path')->nullable();
+            $table->boolean('is_public')->default(true);
             $table->timestamps();
         });
     }

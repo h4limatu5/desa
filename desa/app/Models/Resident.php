@@ -30,5 +30,11 @@ class Resident extends Model
     protected $casts = [
         'tanggal_lahir' => 'date',
     ];
+
+    public function letters()
+    {
+        return $this->hasMany(\App\Models\Letter::class);
+    }
 }
+
 

@@ -1,50 +1,52 @@
-<!doctype html>
-<html lang="id">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin - Edit Warga</title>
-    <link rel="stylesheet" href="/css/app.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Edit Warga</h1>
+@extends('admin.layout')
 
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+@section('title', 'Edit Warga')
 
-        <form method="POST" action="{{ route('admin.residents.update', $resident) }}">
+@section('content')
+    <div class="page-header">
+        <div>
+            <h1>Edit Warga</h1>
+            <p class="text-muted">Perbarui data warga yang sudah terdaftar.</p>
+        </div>
+        <a href="{{ route('admin.residents.index') }}" class="btn btn-secondary">Kembali</a>
+    </div>
+
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="card p-6">
+        <form method="POST" action="{{ route('admin.residents.update', $resident) }}" class="grid gap-6">
             @csrf
             @method('PUT')
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">NIK</label>
                 <input class="form-control" name="nik" value="{{ old('nik', $resident->nik) }}" required maxlength="16">
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">KK</label>
                 <input class="form-control" name="kk" value="{{ old('kk', $resident->kk) }}" maxlength="16">
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">Nama Lengkap</label>
                 <input class="form-control" name="nama_lengkap" value="{{ old('nama_lengkap', $resident->nama_lengkap) }}" required maxlength="255">
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">Tanggal Lahir</label>
                 <input class="form-control" type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', optional($resident->tanggal_lahir)->format('Y-m-d')) }}">
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">Jenis Kelamin</label>
                 <select class="form-control" name="jenis_kelamin">
                     <option value="">-- pilih --</option>
@@ -53,33 +55,33 @@
                 </select>
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">Nomor HP</label>
                 <input class="form-control" name="nomor_hp" value="{{ old('nomor_hp', $resident->nomor_hp) }}" maxlength="255">
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">Alamat</label>
                 <input class="form-control" name="alamat" value="{{ old('alamat', $resident->alamat) }}" maxlength="255">
             </div>
 
-            <div class="row">
-                <div class="mb-3 col">
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                <div>
                     <label class="form-label">RT</label>
                     <input class="form-control" name="rt" value="{{ old('rt', $resident->rt) }}" maxlength="10">
                 </div>
-                <div class="mb-3 col">
+                <div>
                     <label class="form-label">RW</label>
                     <input class="form-control" name="rw" value="{{ old('rw', $resident->rw) }}" maxlength="10">
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">Desa</label>
                 <input class="form-control" name="desa" value="{{ old('desa', $resident->desa) }}" maxlength="255">
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">Status Perkawinan</label>
                 <select class="form-control" name="status_perkawinan">
                     <option value="">-- pilih --</option>
@@ -91,7 +93,7 @@
                 </select>
             </div>
 
-            <div class="mb-3">
+            <div>
                 <label class="form-label">Status Warga</label>
                 <select class="form-control" name="status_warga">
                     <option value="Aktif" @selected(old('status_warga', $resident->status_warga)==='Aktif')>Aktif</option>
@@ -99,10 +101,11 @@
                 </select>
             </div>
 
-            <button class="btn btn-success" type="submit">Update</button>
-            <a class="btn btn-secondary" href="{{ route('admin.residents.index') }}">Kembali</a>
+            <div class="grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem;">
+                <button class="btn btn-primary" type="submit">Update</button>
+                <a class="btn btn-secondary" href="{{ route('admin.residents.index') }}">Kembali</a>
+            </div>
         </form>
     </div>
-</body>
-</html>
+@endsection
 
