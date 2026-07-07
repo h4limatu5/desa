@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Letter;
 use App\Models\LetterTemplate;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -12,14 +13,27 @@ use Illuminate\Support\Str;
 
 class AdminLetterController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorizeAdmin();
 
-        $letters = Letter::query()->with('resident')->orderByDesc('id')->paginate(10);
+        $query = Letter::query()->with('resident');
 
-        return view('admin.letters.index', compact('letters'));
+        if ($request->filled('jenis_surat')) {
+            $query->where('jenis_surat', $request->input('jenis_surat'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        $letters = $query->orderByDesc('id')->paginate(10)->withQueryString();
+
+        $letterTemplates = LetterTemplate::query()->orderBy('name')->get();
+
+        return view('admin.letters.index', compact('letters', 'letterTemplates'));
     }
+
 
     public function approve(Request $request, Letter $letter)
     {
@@ -62,6 +76,33 @@ class AdminLetterController extends Controller
             ->with('success', 'Pengajuan ditolak.');
     }
 
+    public function processed(Request $request, Letter $letter)
+    {
+        $this->authorizeAdmin();
+
+        // Restriksi sederhana: hanya bisa diproses dari status submitted
+        if ($letter->status !== 'submitted') {
+            abort(422, 'Surat tidak dapat diproses pada status saat ini.');
+        }
+
+        $letter->status = 'processed';
+        $letter->save();
+
+        return redirect()->route('admin.letters.index')
+            ->with('success', 'Pengajuan diproses.');
+    }
+
+    public function download(Letter $letter)
+    {
+        $this->authorizeAdmin();
+
+        if (!$letter->pdf_path || !Storage::disk('local')->exists($letter->pdf_path)) {
+            abort(404, 'PDF belum tersedia.');
+        }
+
+        return Storage::disk('local')->download($letter->pdf_path, Str::slug($letter->jenis_surat) . '.pdf');
+    }
+
     private function authorizeAdmin()
     {
         $user = Auth::user();
@@ -72,16 +113,16 @@ class AdminLetterController extends Controller
 
     private function generatePdf(Letter $letter): void
     {
-        // Implementasi PDF: jika package PDF belum ada, gunakan placeholder.
-        // Karena dependensi PDF tidak ada di repo saat ini, kita buat skema file .pdf kosong.
-        // Saat deploy produksi, ganti dengan real PDF generator (mis. barryvdh/laravel-dompdf).
-
         $path = 'letters/' . $letter->id . '/' . Str::slug($letter->jenis_surat) . '.pdf';
 
-        Storage::disk('local')->put($path, '%PDF-1.4\n% Fake PDF generated placeholder\n');
+        $pdf = Pdf::loadView('pdf.letter', compact('letter'));
+        $content = $pdf->output();
+
+        Storage::disk('local')->put($path, $content);
 
         $letter->pdf_path = $path;
         $letter->save();
     }
 }
+
 

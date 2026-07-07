@@ -26,11 +26,47 @@
     @endif
 
     <h2 class="font-bold mt-6 mb-2">Data Pengajuan</h2>
-    <pre class="bg-gray-100 p-3 rounded">{{ json_encode($letter->isi_data_json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) }}</pre>
+
+    @php
+        $canEdit = in_array($letter->status, ['submitted','rejected'], true);
+        $isiJson = json_encode($letter->isi_data_json, JSON_UNESCAPED_UNICODE);
+    @endphp
+
+    @if ($canEdit)
+        <form method="POST" action="{{ route('warga.letters.update', $letter) }}" class="mb-4">
+            @csrf
+            @method('PATCH')
+
+            <textarea
+                name="isi_data_json"
+                class="border rounded p-2 w-full"
+                rows="6"
+                required
+            >{{ $isiJson }}</textarea>
+
+            @error('isi_data_json')
+                <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+            @enderror
+
+            <div class="mt-3 flex gap-3 flex-wrap">
+                <button type="submit" class="bg-black text-white px-4 py-2 rounded">Simpan Perubahan</button>
+
+                <form method="POST" action="{{ route('warga.letters.cancel', $letter) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-2 rounded border bg-white">Batal Pengajuan</button>
+                </form>
+            </div>
+        </form>
+    @else
+        <pre class="bg-gray-100 p-3 rounded">{{ json_encode($letter->isi_data_json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) }}</pre>
+    @endif
 
     @if ($letter->pdf_path && $letter->status === 'approved')
         <a class="inline-block mt-4 bg-black text-white px-4 py-2 rounded" href="{{ route('storage.local.download', $letter->pdf_path) }}">Download PDF</a>
     @endif
 </body>
 </html>
+
+
 

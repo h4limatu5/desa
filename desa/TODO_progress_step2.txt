@@ -1,0 +1,11 @@
+Step 2 (CRUD Akun Warga) progress
+
+Done:
+- Registrasi: input NIK + validasi exists residents, set resident_id, set role=warga
+- Form registrasi: tambah field NIK
+
+Pending:
+- Update profil (password/foto/nomor_hp) sesuai kolom yang ada di database
+- Delete akun warga / nonaktif saat keluar desa (butuh mekanisme kolom status/soft delete atau role guard)
+- Update views/menu bila diperlukan
+

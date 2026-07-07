@@ -20,17 +20,30 @@ class AdminResidentController extends Controller
             $query->where('nik', 'like', '%' . $request->nik . '%');
         }
 
+        if ($request->filled('nama')) {
+            $query->where('nama_lengkap', 'like', '%' . $request->nama . '%');
+        }
+
         if ($request->filled('kk')) {
             $query->where('kk', 'like', '%' . $request->kk . '%');
+        }
+
+        if ($request->filled('rt')) {
+            $query->where('rt', $request->rt);
+        }
+
+        if ($request->filled('rw')) {
+            $query->where('rw', $request->rw);
+        }
+
+        if ($request->filled('jenis_kelamin')) {
+            $query->where('jenis_kelamin', $request->jenis_kelamin);
         }
 
         if ($request->filled('status_warga')) {
             $query->where('status_warga', $request->status_warga);
         }
 
-        if ($request->filled('jenis_kelamin')) {
-            $query->where('jenis_kelamin', $request->jenis_kelamin);
-        }
 
         $residents = $query->orderByDesc('id')->paginate(10)->withQueryString();
 
@@ -103,10 +116,11 @@ class AdminResidentController extends Controller
 
     public function destroy(Resident $resident)
     {
-        $resident->delete();
+        $resident->delete(); // soft delete karena Model Resident memakai SoftDeletes
 
         return redirect()->route('admin.residents.index')
-            ->with('success', 'Data warga berhasil dihapus.');
+            ->with('success', 'Data warga berhasil dihapus (soft delete).');
     }
 }
+
 

@@ -68,5 +68,69 @@ class WargaLetterController extends Controller
 
         return view('warga.letters.show', compact('letter', 'template'));
     }
+
+    public function update(Request $request, Letter $letter)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            abort(403);
+        }
+
+        if ($user->id !== $letter->user_id) {
+            abort(403);
+        }
+
+        // Hanya boleh ubah saat pending/rejected (sesuai permintaan)
+        if (!in_array($letter->status, ['submitted', 'rejected'], true)) {
+            abort(422, 'Isi pengajuan hanya dapat diubah saat status pending/rejected.');
+        }
+
+        $request->validate([
+            'isi_data_json' => ['required'],
+        ]);
+
+        $isiData = $request->input('isi_data_json');
+        if (is_string($isiData)) {
+            $isiData = json_decode($isiData, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return back()->withErrors(['isi_data_json' => 'Isi data JSON tidak valid.'])->withInput();
+            }
+        }
+
+        if (!is_array($isiData)) {
+            return back()->withErrors(['isi_data_json' => 'Isi data harus berupa JSON objek atau array.'])->withInput();
+        }
+
+        $letter->isi_data_json = $isiData;
+        $letter->status = 'submitted';
+        $letter->save();
+
+        return redirect()->route('warga.letters.show', $letter)
+            ->with('success', 'Isi pengajuan berhasil diperbarui.');
+    }
+
+    public function cancel(Letter $letter)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            abort(403);
+        }
+
+        if ($user->id !== $letter->user_id) {
+            abort(403);
+        }
+
+        // Soft delete hanya boleh saat submitted/pending atau rejected
+        if (!in_array($letter->status, ['submitted', 'rejected'], true)) {
+            abort(422, 'Pengajuan hanya dapat dibatalkan saat status pending/rejected.');
+        }
+
+        $letter->delete();
+
+        return redirect()->route('warga.dashboard')
+            ->with('success', 'Pengajuan surat dibatalkan.');
+    }
 }
+
+
 

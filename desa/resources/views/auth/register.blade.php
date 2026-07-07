@@ -1,50 +1,47 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-</head>
-<body class="bg-white p-6">
-    <div class="max-w-md mx-auto">
-        <h1 class="text-xl font-bold mb-4">Daftar</h1>
+@extends('auth.layout_auth')
 
-        @if ($errors->any())
-            <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+@php
+    $brandTitle = 'Desa Portal';
+    $brandSubtitle = 'Buat akun untuk mengakses manajemen desa, pengaduan, dan surat resmi.';
+@endphp
 
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
+@section('title', 'Register')
 
-            <div class="mb-4">
-                <label class="block mb-1">Nama</label>
-                <input type="text" name="name" value="{{ old('name') }}" required class="border rounded p-2 w-full" />
-            </div>
+@section('content')
+    <form method="POST" action="{{ route('register') }}" class="auth-form">
+        @csrf
 
-            <div class="mb-4">
-                <label class="block mb-1">Email</label>
-                <input type="email" name="email" value="{{ old('email') }}" required class="border rounded p-2 w-full" />
-            </div>
+        <div class="mb-4">
+            <label for="nik">NIK</label>
+            <input id="nik" type="text" name="nik" value="{{ old('nik') }}" required class="auth-input" maxlength="16" />
+        </div>
 
-            <div class="mb-4">
-                <label class="block mb-1">Password</label>
-                <input type="password" name="password" required class="border rounded p-2 w-full" />
-            </div>
+        <div class="mb-4">
+            <label for="name">Nama</label>
+            <input id="name" type="text" name="name" value="{{ old('name') }}" required class="auth-input" />
+        </div>
 
-            <div class="mb-4">
-                <label class="block mb-1">Konfirmasi Password</label>
-                <input type="password" name="password_confirmation" required class="border rounded p-2 w-full" />
-            </div>
+        <div class="mb-4">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required class="auth-input" />
+        </div>
 
-            <button type="submit" class="bg-black text-white px-4 py-2 rounded">Daftar</button>
-        </form>
+
+        <div class="mb-4">
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" required class="auth-input" />
+        </div>
+
+        <div class="mb-6">
+            <label for="password_confirmation">Konfirmasi Password</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required class="auth-input" />
+        </div>
+
+        <button type="submit" class="auth-button">Daftar</button>
+    </form>
+
+    <div class="auth-footer">
+        Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a>
     </div>
-</body>
-</html>
+@endsection
+

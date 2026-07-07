@@ -10,7 +10,10 @@ class Resident extends Model
     /** @use HasFactory<\Database\Factories\ResidentFactory> */
     use HasFactory;
 
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+
     protected $table = 'residents';
+
 
     protected $fillable = [
         'nik',

@@ -17,6 +17,8 @@ Route::prefix('admin')->name('admin.')
         Route::get('/letters', [AdminLetterController::class, 'index'])->name('letters.index');
         Route::post('/letters/{letter}/approve', [AdminLetterController::class, 'approve'])->name('letters.approve');
         Route::post('/letters/{letter}/reject', [AdminLetterController::class, 'reject'])->name('letters.reject');
+        Route::post('/letters/{letter}/processed', [AdminLetterController::class, 'processed'])->name('letters.processed');
+        Route::get('/letters/{letter}/download', [AdminLetterController::class, 'download'])->name('letters.download');
     });
 
 

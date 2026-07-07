@@ -30,6 +30,10 @@ Route::prefix('warga')->middleware(['auth', 'role:warga'])->name('warga.')->grou
     Route::get('/letters/create', [WargaLetterController::class, 'create'])->name('letters.create');
     Route::post('/letters', [WargaLetterController::class, 'store'])->name('letters.store');
     Route::get('/letters/{letter}', [WargaLetterController::class, 'show'])->name('letters.show');
+
+    Route::patch('/letters/{letter}', [WargaLetterController::class, 'update'])->name('letters.update');
+    Route::delete('/letters/{letter}', [WargaLetterController::class, 'cancel'])->name('letters.cancel');
 });
 
 require __DIR__ . '/admin.php';
+

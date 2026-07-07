@@ -64,7 +64,7 @@
                 <input class="form-control" name="alamat" value="{{ old('alamat') }}" maxlength="255">
             </div>
 
-            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+            <div class="grid grid-cols-2 gap-6">
                 <div>
                     <label class="form-label">RT</label>
                     <input class="form-control" name="rt" value="{{ old('rt') }}" maxlength="10">
@@ -100,7 +100,7 @@
                 </select>
             </div>
 
-            <div class="grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem;">
+            <div class="grid grid-cols-2 gap-6">
                 <button class="btn btn-primary" type="submit">Simpan</button>
                 <a class="btn btn-secondary" href="{{ route('admin.residents.index') }}">Kembali</a>
             </div>

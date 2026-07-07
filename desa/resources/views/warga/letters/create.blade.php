@@ -21,7 +21,9 @@
             <select name="jenis_surat" class="border rounded p-2 w-full" required>
                 <option value="" disabled selected>Pilih jenis surat</option>
                 @foreach ($templates as $t)
-                    <option value="{{ $t->jenis_surat }}">{{ $t->jenis_surat }} ({{ $t->name }})</option>
+                    {{-- value tetap `jenis_surat` agar pemrosesan & template lookup tetap bekerja.
+                         Tampilan berupa judul/kategori yang lebih mudah dipahami warga. --}}
+                    <option value="{{ $t->jenis_surat }}">{{ $t->name }} ({{ $t->jenis_surat }})</option>
                 @endforeach
             </select>
         </div>

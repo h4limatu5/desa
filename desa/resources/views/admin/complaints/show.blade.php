@@ -53,7 +53,7 @@
                 <textarea name="response" class="form-control" rows="4">{{ old('response', $complaint->response) }}</textarea>
             </div>
 
-            <div class="grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem;">
+            <div class="grid grid-cols-2 gap-6">
                 <button class="btn btn-primary" type="submit">Simpan Perubahan</button>
                 <a class="btn btn-secondary" href="{{ route('admin.complaints.index') }}">Kembali</a>
             </div>

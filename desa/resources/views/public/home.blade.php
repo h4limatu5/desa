@@ -1,64 +1,62 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desa | Beranda</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-</head>
-<body class="bg-white text-gray-900">
-    <div class="max-w-6xl mx-auto p-6">
-        <header class="mb-10">
-            <h1 class="text-3xl font-bold">Profil & Berita Desa</h1>
-            <p class="text-gray-600 mt-2">Informasi struktur organisasi, visi-misi, sejarah, kegiatan, dan berita desa terbaru.</p>
-        </header>
+@extends('public.layout_public')
 
-        <section class="mb-10">
-            <h2 class="text-2xl font-semibold mb-3">Berita Terbaru</h2>
-            <div class="grid gap-6 lg:grid-cols-3">
-                @foreach ($news as $item)
-                    <article class="border rounded-lg p-4 shadow-sm">
-                        <h3 class="text-xl font-semibold mb-2">{{ $item->title }}</h3>
-                        <p class="text-gray-600 mb-3">{{ $item->excerpt }}</p>
-                        <a href="{{ route('public.news.show', $item) }}" class="text-blue-600">Baca selengkapnya</a>
-                    </article>
-                @endforeach
-            </div>
-        </section>
+@section('title', 'Beranda')
 
-        <section class="mb-10">
-            <h2 class="text-2xl font-semibold mb-3">Katalog UMKM & Potensi Desa</h2>
-            <div class="grid gap-6 lg:grid-cols-3">
-                @foreach ($umkms as $item)
-                    <article class="border rounded-lg p-4 shadow-sm">
-                        <h3 class="text-xl font-semibold mb-2">{{ $item->name }}</h3>
-                        <p class="text-gray-600 mb-2">{{ $item->category }}</p>
-                        <p class="text-gray-600 mb-3">{{ Str::limit($item->description, 100) }}</p>
-                        <a href="{{ route('public.umkm.show', $item) }}" class="text-blue-600">Lihat detail</a>
-                    </article>
-                @endforeach
-            </div>
-        </section>
-
-        <section class="grid gap-6 lg:grid-cols-2">
-            <div class="border rounded-lg p-6 shadow-sm">
-                <h2 class="text-2xl font-semibold mb-3">Layanan Surat Mandiri</h2>
-                <p class="text-gray-600 mb-4">Warga bisa login, ajukan surat, dan cek status verifikasi.</p>
-                <a href="{{ route('login') }}" class="bg-black text-white px-4 py-2 rounded">Masuk / Ajukan Surat</a>
-            </div>
-
-            <div class="border rounded-lg p-6 shadow-sm">
-                <h2 class="text-2xl font-semibold mb-3">E-Reporting</h2>
-                <p class="text-gray-600">Laporkan fasilitas publik rusak langsung dengan foto.</p>
-                <a href="{{ route('login') }}" class="bg-black text-white px-4 py-2 rounded">Login untuk lapor</a>
-            </div>
-        </section>
-
-        <section class="mt-10 border rounded-lg p-6 shadow-sm bg-gray-50">
-            <h2 class="text-2xl font-semibold mb-3">Transparansi Keuangan APBDes</h2>
-            <p class="text-gray-600 mb-4">Lihat ringkasan anggaran desa dan realisasi pembangunan secara transparan.</p>
-            <a href="{{ route('public.budgets.index') }}" class="text-blue-600">Lihat APBDes</a>
-        </section>
+@section('content')
+    <div class="home-hero">
+        <h1>Desa Portal: Akses Cepat Layanan Desa</h1>
+        <p>Jelajahi berita desa, UMKM lokal, ajukan surat mandiri, laporkan fasilitas publik, dan pantau transparansi APBDes secara mudah dalam satu portal.</p>
     </div>
-</body>
-</html>
+
+    <section class="page-section">
+        <div class="section-heading">Pilihan Layanan</div>
+        <p class="section-subtitle">Pilih layanan yang Anda butuhkan dan lanjutkan dengan cepat melalui portal desa.</p>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="card-icon">📰</div>
+                <h2>Profil & Berita Desa</h2>
+                <p>Temukan informasi terbaru mengenai visi-misi, struktur organisasi, kegiatan, serta berita desa setempat.</p>
+                <a href="{{ route('public.news.index') }}" class="btn">Lihat Berita</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">🏪</div>
+                <h2>Katalog UMKM & Potensi Desa</h2>
+                <p>Jelajahi usaha lokal dan potensi desa untuk dukung pelaku UMKM dan perekonomian desa.</p>
+                <a href="{{ route('public.umkm.index') }}" class="btn">Lihat UMKM</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">📄</div>
+                <h2>Layanan Surat Mandiri</h2>
+                <p>Ajukan surat dan cek status verifikasi dengan cepat setelah login ke sistem warga.</p>
+                @auth
+                    <a href="{{ route('warga.letters.create') }}" class="btn">Ajukan Surat</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn">Masuk / Ajukan Surat</a>
+                @endauth
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">📝</div>
+                <h2>E-Reporting</h2>
+                <p>Laporkan kerusakan publik dengan foto dan pantau tindak lanjutnya melalui portal desa.</p>
+                @auth
+                    <a href="{{ route('warga.complaints.create') }}" class="btn">Laporkan Sekarang</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn">Login untuk Lapor</a>
+                @endauth
+            </div>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <div class="public-card">
+            <div class="card-icon-large">💰</div>
+            <h2>Transparansi Keuangan APBDes</h2>
+            <p>Pelajari ringkasan anggaran desa, realisasi pembangunan, dan penggunaan dana masyarakat secara transparan.</p>
+            <a href="{{ route('public.budgets.index') }}" class="btn btn-lg">Lihat APBDes</a>
+        </div>
+    </section>
+@endsection
+

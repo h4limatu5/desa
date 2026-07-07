@@ -1,0 +1,13 @@
+Step 3 (Workflow Surat Mandiri) - progress
+
+Done:
+- Tambah endpoint admin untuk status `processed` (AdminLetterController::processed + route)
+- UI admin index: tombol aksi sesuai status (submitted/processed/other)
+- Admin: filter surat berdasarkan jenis_surat dan status + pagination withQueryString()
+
+Pending:
+1) Migration `processed` value: validasi skema enum/kolom di DB (migration 2026_07_07_000002 masih riskan untuk beberapa DB engine)
+2) Warga: update isi permohonan hanya saat status pending/rejected (saat ini masih bebas ubah/submit)
+3) Warga: batal pengajuan (soft delete) hanya saat status submitted/pending (belum ada)
+4) Admin: filter surat lebih rapi per jenis_surat (dropdown dari letter_templates) + pemisahan arsip per kategori (opsional)
+
